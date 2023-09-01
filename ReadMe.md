@@ -27,15 +27,15 @@ Some event data come as json files and need some transformation to be structured
         DefeatReasons: in quotes
         EnqueuedTimeSP: DD/MM/YYYY (converted to Brasilian timezone - UTC-3) ```
 
-2. `DynamicPriceOption.csv`:
-        ``` Provider: in quotes
+2. `DynamicPriceOption.csv`
+    ``` Provider: in quotes
         OfferId: in quotes
         UniqueOptionId: in quotes
         BestPrice: without quotes
         EnqueuedTimeSP: DD/MM/YYYY (converted to Brasilian timezone - UTC-3) ```
 
 3. `DynamicPriceRange.csv`:
-        ``` Provider: in quotes
+    ``` Provider: in quotes
         OfferId: in quotes
         MinGlobal: without quotes
         MinRecommended: without quotes
