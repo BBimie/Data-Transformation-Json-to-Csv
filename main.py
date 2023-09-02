@@ -2,18 +2,25 @@ import json
 import pandas as pd
 
 #open the json file
+print('Read Json file')
 with open('data/raw/case.json') as json_file:
         json_data = json.load(json_file)
+        
 
 
 def curated_offer_options(json_data)-> pd.DataFrame:
     """ This function extracts curated offer events """
+
+    print('Extract Curated offer options data')
+
     data = []
     for item in json_data:
-        
+        #check for event curationProvider, we are using 'in' because the data is formatted as a string at this point
         if 'curationProvider' in item['Payload']:
+            #convert data to json/dict
             payload = json.loads(item['Payload'])
             
+            #loop through payload and then options to get to the base level data
             for curation_provider in payload:
                 for option in curation_provider['options']:
                     row = { 'OfferId' : curation_provider['offerId'],
@@ -30,6 +37,7 @@ def curated_offer_options(json_data)-> pd.DataFrame:
                           'MaximumPrice' : option['maximumPrice'],
                           'DynamicPrice' : option['dynamicPrice'],
                           'FinalPrice' : option['finalPrice'],
+                          #return value if present
                           'DefeatPrimaryReason': (option.get('defeatPrimaryReason', "")),
                           'DefeatReasons': ', '.join(option.get('defeatReasons', [])),
                           'EnqueuedTimeSP' : pd.Timestamp(item['EnqueuedTimeUtc']).tz_convert('America/Sao_Paulo').strftime('%d/%m/%Y')
@@ -39,6 +47,10 @@ def curated_offer_options(json_data)-> pd.DataFrame:
 
 
 def dynamic_price_option(json_data) -> pd.DataFrame:
+    """ This function extracts dynamic price option events """
+
+    print('Extract dynamic price option data')
+    
     data = []
         
     for item in json_data:
@@ -57,6 +69,10 @@ def dynamic_price_option(json_data) -> pd.DataFrame:
 
 
 def dynamic_price_range(json_data) -> pd.DataFrame:
+    """ This function extracts dynamic price range events """
+
+    print('Extract dynamic price range data')
+    
     data = []
     for item in json_data:
         #extract data needed from item payload
@@ -75,6 +91,6 @@ def dynamic_price_range(json_data) -> pd.DataFrame:
     return pd.DataFrame(data)
 
 
-curated_offer_options().to_csv('data/processed/CuratedOfferOptions.csv', index=False)
-dynamic_price_option().to_csv('data/processed/DynamicPriceOption.csv', index=False)
-dynamic_price_range().to_csv('data/processed/DynamicPriceRange.csv', index=False)
+curated_offer_options(json_data=json_data).to_csv('data/processed/CuratedOfferOptions.csv', index=False)
+dynamic_price_option(json_data=json_data).to_csv('data/processed/DynamicPriceOption.csv', index=False)
+dynamic_price_range(json_data=json_data).to_csv('data/processed/DynamicPriceRange.csv', index=False)
